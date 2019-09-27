@@ -1,0 +1,3 @@
+sumo-gui config.sumocfg 
+
+python randomTrips.py -n ../../simple.net.xml
