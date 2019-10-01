@@ -4,7 +4,11 @@ python randomTrips.py -n ../../simple.net.xml
 
 No graphical interface. Just simulation + stats: 
 
-sumo -c config.sumocfg --summary 1.xml 
+ - sumo -c config.sumocfg --summary 1.xml 
+
+Convert OSM map to XML:
+
+ - netconvert --osm-files map.osm -o cibeles.net.xml
 
 
 
