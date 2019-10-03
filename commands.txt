@@ -2,15 +2,25 @@ sumo-gui config.sumocfg
 
 python randomTrips.py -n ../../simple.net.xml
 
-No graphical interface. Just simulation + stats: 
 
- - sumo -c config.sumocfg --summary 1.xml 
+No graphical interface. Just simulation + stats: 
+    sumo -c config.sumocfg --summary 1.xml 
+Se puede añadir esto en el config file:
+	<summary-output value="summary.xml"/>
+
 
 Convert OSM map to XML:
+	netconvert --osm-files map.osm -o cibeles.net.xml
 
- - netconvert --osm-files map.osm -o cibeles.net.xml
 
 
+Estadísticas:
+	sumo -c config.sumocfg --duration-log.statistics True
+
+
+
+Comando de ejecución para sacar tripinfo + datos sobre semáforos:
+	sumo -c config.sumocfg --duration-log.statistics True --additional-files additional.xml
 
 ------------------------------------
 ------------------------------------
