@@ -4,9 +4,10 @@
 <net-file value="simple.net.xml"/>
 <route-files value="trips.trips.xml"/>
 </input> 
-<!-- <output>
-   <netstate-dump value="output.xml" />
-</output> -->
+<output>
+   <!-- <netstate-dump value="output.xml" /> -->
+   <tripinfo-output value="output/tripinfo.xml"/>
+</output>
 
 
 <time> <begin value="0"/>
