@@ -3,7 +3,7 @@ import xml.etree.ElementTree as ET
 import pandas as pd
 
 #Get into xml file
-path2 = "/Users/sergio/sergioData/Everis2019/SUMO/demoRandomCars/output/tl.xml"
+path2 = "./demoRandomCars/output/tripinfo.xml"
 
 
 tree = ET.parse(path2)
@@ -24,5 +24,5 @@ for child in root:
 # print(data)
 
 #Export csv
-output_path2 = "/Users/sergio/sergioData/Everis2019/SUMO/demoRandomCars/csv/tl.csv"
+output_path2 = "./demoRandomCars/csv/tl.csv"
 export_csv = data.to_csv (output_path2, index = None,sep=',',header=True) #Don't forget to add '.csv' at the end of the path
