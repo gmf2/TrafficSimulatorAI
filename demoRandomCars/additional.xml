@@ -1,3 +1,11 @@
 <additional>
 	<timedEvent type="SaveTLSStates" source="n1" dest="output/tl.xml"/>
+	<inductionLoop id="loop2_0" lane="2to1_0" pos="465" freq="10" file="output/out.xml"/>
+	<inductionLoop id="loop2_1" lane="2to1_1" pos="465" freq="10" file="output/out.xml"/>
+    <inductionLoop id="loop3_0" lane="3to1_0" pos="470" freq="10" file="output/out.xml"/>
+	<inductionLoop id="loop3_1" lane="3to1_1" pos="470" freq="10" file="output/out.xml"/>
+	<inductionLoop id="loop4_0" lane="4to1_0" pos="475" freq="10" file="output/out.xml"/>
+	<inductionLoop id="loop4_1" lane="4to1_1" pos="475" freq="10" file="output/out.xml"/>
+	<inductionLoop id="loop5_0" lane="5to1_0" pos="479" freq="10" file="output/out.xml"/>
+	<inductionLoop id="loop5_1" lane="5to1_1" pos="479" freq="10" file="output/out.xml"/>
 </additional>

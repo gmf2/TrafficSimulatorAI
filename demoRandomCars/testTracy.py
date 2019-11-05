@@ -11,7 +11,6 @@ from __future__ import print_function
 import os
 import sys
 import optparse
-import random
 #print('hello')
 #Tools SUMO
 if 'SUMO_HOME' in os.environ:
@@ -23,26 +22,44 @@ else:
 from sumolib import checkBinary  # Checks for the binary in environ vars
 import traci
 
-from sumolib import checkBinary  
-import traci  
+
+
 
 def run():
     print('hello')
 #        """execute the TraCI control loop"""
     step = 0
-    print('phase{}'.format(traci.trafficlight.getPhase("1")))
-    traci.trafficlight.setPhase("1", 2)
+    #Phase 1:North
+    #Phase 2:East
+    #Phase 3:South
+    #Phase 4:West
+    print('phase{}'.format(traci.trafficlight.getPhase('n1')))
+    traci.trafficlight.setPhase("n1", 2)
 #    print('eu')
     while traci.simulation.getMinExpectedNumber() > 0:
         traci.simulationStep()
-        if traci.trafficlight.getPhase("0") == 2:
+        #Traffic light in Phase 0: (Initial)
+        print('phase cond:{}'.format(traci.trafficlight.getPhase("n1") ==0))
+        if traci.trafficlight.getPhase("n1") ==0:
             # we are not already switching
-            if traci.inductionloop.getLastStepVehicleNumber("0") > 0:
-                # there is a vehicle from the north, switch
-                traci.trafficlight.setPhase("0", 3)
+            print((traci.inductionloop.getLastStepVehicleNumber("loop2_0") > 0) or (traci.inductionloop.getLastStepVehicleNumber("loop2_1") > 0) or (traci.inductionloop.getLastStepVehicleNumber("loop3_0") > 0) or (traci.inductionloop.getLastStepVehicleNumber("loop3_1") > 0))
+            #If there are more than one vehicle through west or east, switch
+            if (traci.inductionloop.getLastStepVehicleNumber("loop2_0") > 0) or (traci.inductionloop.getLastStepVehicleNumber("loop2_1") > 0) or (traci.inductionloop.getLastStepVehicleNumber("loop3_0") > 0) or (traci.inductionloop.getLastStepVehicleNumber("loop3_1") > 0)  :
+                # there is a vehicle from the east or weast, switch
+                traci.trafficlight.setPhase("n1", 2)
             else:
-                # otherwise try to keep green for EW
-                traci.trafficlight.setPhase("0", 2)
+                # otherwise try to keep green for north or south
+                traci.trafficlight.setPhase("n1", 1)  
+        print('Setphase{}'.format(traci.trafficlight.getPhase('n1')))
+        #Traffic light in Phase 1 or 3 :(North or South)
+        if traci.trafficlight.getPhase("n1") ==1 or traci.trafficlight.getPhase("n1") ==3 :
+            # we are not already switching
+            if (traci.inductionloop.getLastStepVehicleNumber("loop2_0") > 0) or (traci.inductionloop.getLastStepVehicleNumber("loop2_1") > 0) or (traci.inductionloop.getLastStepVehicleNumber("loop3_0") > 0) or (traci.inductionloop.getLastStepVehicleNumber("loop3_1") > 0)  :
+                # there is a vehicle from the east or weast, switch
+                traci.trafficlight.setPhase("n1", 2)
+            else:
+                # otherwise try to keep green for north or south
+                traci.trafficlight.setPhase("n1",3)
         step += 1
     traci.close()
     sys.stdout.flush()

@@ -148,9 +148,9 @@
 
     <tlLogic id="n1" type="static" programID="0" offset="0">
         <phase duration="42" state="GGGggrrrrrGGGggrrrrr"/>
-        <phase duration="3"  state="yyyyyrrrrryyyyyrrrrr"/>
+        <phase duration="6"  state="yyyyyrrrrryyyyyrrrrr"/>
         <phase duration="42" state="rrrrrGGGggrrrrrGGGgg"/>
-        <phase duration="3"  state="rrrrryyyyyrrrrryyyyy"/>
+        <phase duration="6"  state="rrrrryyyyyrrrrryyyyy"/>
     </tlLogic>
 
     <junction id="n1" type="traffic_light" x="500.00" y="500.00" incLanes="4to1_0 4to1_1 2to1_0 2to1_1 5to1_0 5to1_1 3to1_0 3to1_1" intLanes=":n1_0_0 :n1_1_0 :n1_1_1 :n1_20_0 :n1_21_0 :n1_5_0 :n1_6_0 :n1_6_1 :n1_22_0 :n1_23_0 :n1_10_0 :n1_11_0 :n1_11_1 :n1_24_0 :n1_25_0 :n1_15_0 :n1_16_0 :n1_16_1 :n1_26_0 :n1_27_0" shape="493.60,510.40 506.40,510.40 506.84,508.18 507.40,507.40 508.18,506.84 509.18,506.51 510.40,506.40 510.40,493.60 508.18,493.16 507.40,492.60 506.84,491.82 506.51,490.82 506.40,489.60 493.60,489.60 493.16,491.82 492.60,492.60 491.82,493.16 490.82,493.49 489.60,493.60 489.60,506.40 491.82,506.84 492.60,507.40 493.16,508.18 493.49,509.18">

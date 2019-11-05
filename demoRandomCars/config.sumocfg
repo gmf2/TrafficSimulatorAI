@@ -3,6 +3,7 @@
 <input>
 <net-file value="simple.net.xml"/>
 <route-files value="trips.trips.xml"/>
+<additional-files value="additional.xml"/>
 </input> 
 <output>
    <!-- <netstate-dump value="output.xml" /> -->
