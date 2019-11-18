@@ -20,23 +20,23 @@ class Agent:
 
         self.init_nn()
 
-        self.sess = tf.InteractiveSession()
-        self.sess.run(tf.global_variables_initializer())
+        self.sess = tf.compat.v1.InteractiveSession()
+        self.sess.run(tf.compat.v1.global_variables_initializer())
         return
 
     def init_nn(self):
-        self.state_layer = tf.placeholder(tf.float32, [None, self.lane_len*16 + 4], 'state')
+        self.state_layer = tf.compat.v1.placeholder(tf.float32, [None, self.lane_len*16 + 4], 'state')
         self.lane_layers = [tf.slice(self.state_layer, [0, i*self.lane_len], [-1, self.lane_len]) for i in range(0, 16)]
         self.phase = tf.slice(self.state_layer, [0, 16*self.lane_len], [-1, 4])
         self.subsize = 4
 
-        with tf.name_scope('subnet'):
+        with tf.compat.v1.name_scope('subnet'):
             dim = [self.lane_len, 16, 8, self.subsize]
             nlayer = len(dim)-1
-            w = [tf.Variable(tf.truncated_normal(dim[i:i + 2]) / dim[i]) for i in range(nlayer)]
+            w = [tf.Variable(tf.random.truncated_normal(dim[i:i + 2]) / dim[i]) for i in range(nlayer)]
             b = [tf.Variable(tf.constant(0.00, shape=[dim[i + 1]])) for i in range(nlayer)]
-            for iw in w: tf.add_to_collection(tf.GraphKeys.REGULARIZATION_LOSSES, iw)
-            for ib in b: tf.add_to_collection(tf.GraphKeys.REGULARIZATION_LOSSES, ib)
+            for iw in w: tf.compat.v1.add_to_collection(tf.compat.v1.GraphKeys.REGULARIZATION_LOSSES, iw)
+            for ib in b: tf.compat.v1.add_to_collection(tf.compat.v1.GraphKeys.REGULARIZATION_LOSSES, ib)
             layer = []
             for ilane in self.lane_layers:
                 for ilayer in range(nlayer):
@@ -48,14 +48,14 @@ class Agent:
             self.sub_layers.append(layer[1]+layer[5])
             self.sub_layers.append(layer[3]+layer[7])
 
-        with tf.name_scope('actornet'):
+        with tf.compat.v1.name_scope('actornet'):
             dim = [self.subsize, 16, 8, 4, 1]
             nlayer = len(dim)-1
             for n in range(4):
-                w = [tf.Variable(tf.truncated_normal(dim[i:i + 2]) / dim[i]) for i in range(nlayer)]
+                w = [tf.Variable(tf.random.truncated_normal(dim[i:i + 2]) / dim[i]) for i in range(nlayer)]
                 b = [tf.Variable(tf.constant(0.00, shape=[dim[i + 1]])) for i in range(nlayer)]
-                for iw in w: tf.add_to_collection(tf.GraphKeys.REGULARIZATION_LOSSES, iw)
-                for ib in b: tf.add_to_collection(tf.GraphKeys.REGULARIZATION_LOSSES, ib)
+                for iw in w: tf.compat.v1.add_to_collection(tf.compat.v1.GraphKeys.REGULARIZATION_LOSSES, iw)
+                for ib in b: tf.compat.v1.add_to_collection(tf.compat.v1.GraphKeys.REGULARIZATION_LOSSES, ib)
                 layer4 = []
                 for k in range(4):
                     layer = self.sub_layers[(k+n) % 4]
@@ -71,38 +71,38 @@ class Agent:
 
             dim = [4, 16, 8, 4]
             nlayer = len(dim) - 1
-            w = [tf.Variable(tf.truncated_normal(dim[i:i + 2]) / dim[i]) for i in range(nlayer)]
+            w = [tf.Variable(tf.random.truncated_normal(dim[i:i + 2]) / dim[i]) for i in range(nlayer)]
             b = [tf.Variable(tf.constant(0.00, shape=[dim[i + 1]])) for i in range(nlayer)]
-            for iw in w: tf.add_to_collection(tf.GraphKeys.REGULARIZATION_LOSSES, iw)
-            for ib in b: tf.add_to_collection(tf.GraphKeys.REGULARIZATION_LOSSES, ib)
+            for iw in w: tf.compat.v1.add_to_collection(tf.compat.v1.GraphKeys.REGULARIZATION_LOSSES, iw)
+            for ib in b: tf.compat.v1.add_to_collection(tf.compat.v1.GraphKeys.REGULARIZATION_LOSSES, ib)
             layer = self.phase
             for ilayer in range(nlayer):
                 layer = tf.nn.leaky_relu(tf.matmul(layer, w[ilayer])+b[ilayer])
             # self.action_layer += layer
             self.action_layer = tf.nn.softmax(self.action_layer)
 
-            self.advantage_fb = tf.placeholder(tf.float32, [None])
-            self.action_fb = tf.placeholder(tf.float32, [None, 4])
-            p = tf.reduce_mean(tf.multiply(self.action_layer, self.action_fb), reduction_indices=1)
-            logp = tf.log(tf.clip_by_value(p, 1e-8, 1.))
-            cost = - tf.reduce_mean(tf.multiply(self.advantage_fb, logp))
+            self.advantage_fb = tf.compat.v1.placeholder(tf.float32, [None])
+            self.action_fb = tf.compat.v1.placeholder(tf.float32, [None, 4])
+            p = tf.reduce_mean(input_tensor=tf.multiply(self.action_layer, self.action_fb), axis=1)
+            logp = tf.math.log(tf.clip_by_value(p, 1e-8, 1.))
+            cost = - tf.reduce_mean(input_tensor=tf.multiply(self.advantage_fb, logp))
 
-            regularizer = tf.contrib.layers.l2_regularizer(scale=1e-6)
-            reg_variables = tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES, 'actornnet')
-            reg_variables.extend(tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES, 'subnet'))
+            regularizer = tf.keras.regularizers.l2(l=0.5 * (1e-6))
+            reg_variables = tf.compat.v1.get_collection(tf.compat.v1.GraphKeys.REGULARIZATION_LOSSES, 'actornnet')
+            reg_variables.extend(tf.compat.v1.get_collection(tf.compat.v1.GraphKeys.REGULARIZATION_LOSSES, 'subnet'))
             reg_term = tf.contrib.layers.apply_regularization(regularizer, reg_variables)
             cost += reg_term
 
-            self.lr = tf.placeholder(tf.float32)
-            self.actor_opt = tf.train.AdamOptimizer(self.lr).minimize(cost)
+            self.lr = tf.compat.v1.placeholder(tf.float32)
+            self.actor_opt = tf.compat.v1.train.AdamOptimizer(self.lr).minimize(cost)
 
-        with tf.name_scope('criticnet'):
+        with tf.compat.v1.name_scope('criticnet'):
             dim = [self.subsize, 16, 8, 4, 1]
             nlayer = len(dim) - 1
-            w = [tf.Variable(tf.truncated_normal(dim[i:i+2]) / dim[i]) for i in range(nlayer)]
+            w = [tf.Variable(tf.random.truncated_normal(dim[i:i+2]) / dim[i]) for i in range(nlayer)]
             b = [tf.Variable(tf.constant(0.00, shape=[dim[i+1]])) for i in range(nlayer)]
-            for iw in w: tf.add_to_collection(tf.GraphKeys.REGULARIZATION_LOSSES, iw)
-            for ib in b: tf.add_to_collection(tf.GraphKeys.REGULARIZATION_LOSSES, ib)
+            for iw in w: tf.compat.v1.add_to_collection(tf.compat.v1.GraphKeys.REGULARIZATION_LOSSES, iw)
+            for ib in b: tf.compat.v1.add_to_collection(tf.compat.v1.GraphKeys.REGULARIZATION_LOSSES, ib)
             layer4 = []
             for isub in self.sub_layers:
                 for ilayer in range(nlayer-1):
@@ -111,16 +111,16 @@ class Agent:
                 layer4.append(tf.matmul(isub, w[-1]) + b[-1])
             self.value_layer = layer4[0] + layer4[1] + layer4[2] + layer4[3]
 
-            self.return_fb = tf.placeholder(tf.float32, [None, 1])
-            cost = tf.losses.mean_squared_error(self.return_fb, self.value_layer)
+            self.return_fb = tf.compat.v1.placeholder(tf.float32, [None, 1])
+            cost = tf.compat.v1.losses.mean_squared_error(self.return_fb, self.value_layer)
 
-            regularizer = tf.contrib.layers.l2_regularizer(scale=1e-6)
-            reg_variables = tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES, 'criticnet')
-            reg_variables.extend(tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES, 'subnet'))
+            regularizer = tf.keras.regularizers.l2(l=0.5 * (1e-6))
+            reg_variables = tf.compat.v1.get_collection(tf.compat.v1.GraphKeys.REGULARIZATION_LOSSES, 'criticnet')
+            reg_variables.extend(tf.compat.v1.get_collection(tf.compat.v1.GraphKeys.REGULARIZATION_LOSSES, 'subnet'))
             reg_term = tf.contrib.layers.apply_regularization(regularizer, reg_variables)
             cost += reg_term
 
-            self.critic_opt = tf.train.AdamOptimizer(self.lr).minimize(cost)
+            self.critic_opt = tf.compat.v1.train.AdamOptimizer(self.lr).minimize(cost)
 
     def _train(self, advantage, Return, action, state, lr, iter):
         for _ in range(iter[0]):

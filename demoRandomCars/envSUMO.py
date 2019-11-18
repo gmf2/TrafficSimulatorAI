@@ -10,10 +10,13 @@ import traci
 import numpy as np
 
 class SumoEnv:
-    place_len = 7.5
-    place_offset = 8.50
-    lane_len = 10
-    lane_ids = ['1to2_0', '1to2_1', '1to3_0', '1to3_1', '1to4_0', '1to4_1', '1to5_0', '1to5_1', '2to1_0', '2to1_1', '3to1_0', '3to1_1', '4to1_0', '4to1_1', '5to1_0', '5to1_1']
+    place_len = 37.5
+    place_offset = 42.50
+    lane_len = 50
+    lane_ids = ['4to1_0', '4to1_1','1to5_0', '1to5_1',
+                '3to1_0', '3to1_1','1to2_0', '1to2_1',
+                '5to1_0', '5to1_1','1to4_0', '1to4_1',
+                 '2to1_0', '2to1_1','1to3_0', '1to3_1']
 
     def __init__(self, label='default', gui_f=False):
         self.label = label
@@ -33,29 +36,31 @@ class SumoEnv:
         return
     
     def get_state_d(self):
-        state = np.zeros(self.lane_len * 8 + 4, dtype=np.float32)
+        state = np.zeros(self.lane_len * 16 + 4, dtype=np.float32)
     
-        for ilane in range(0, 8):
+        for ilane in range(0, 16):
             lane_id = self.lane_ids[ilane]
             ncars = traci.lane.getLastStepVehicleNumber(lane_id)
             cars = traci.lane.getLastStepVehicleIDs(lane_id)
             for icar in cars:
                 xcar, ycar = traci.vehicle.getPosition(icar)
-                if ilane < 2:
+                if ilane < 4:
                     pos = (ycar - self.place_offset) / self.place_len
-                elif ilane < 4:
+                elif ilane < 8:
                     pos = (xcar - self.place_offset) / self.place_len
-                elif ilane < 6:
+                elif ilane < 12:
                     pos = (-ycar - self.place_offset) / self.place_len
                 else:
                     pos = (-xcar - self.place_offset) / self.place_len
                 if pos > self.lane_len - 1.:
                     continue
+                #Position should go between lane len
                 pos = np.clip(pos, 0., self.lane_len - 1. - 1e-6)
                 ipos = int(pos)
+                
                 state[int(ilane * self.lane_len + ipos)] += 1. - pos + ipos
                 state[int(ilane * self.lane_len + ipos + 1)] += pos - ipos
-            state[self.lane_len * 8:self.lane_len * 8+4] = np.eye(4)[traci.trafficlight.getPhase('n1')]
+            state[self.lane_len * 16:self.lane_len * 16+4] = np.eye(4)[traci.trafficlight.getPhase('n1')]
         return state
 
     def step_d(self, action):
@@ -63,6 +68,7 @@ class SumoEnv:
         # traci.switch(self.label)
 
         action = np.squeeze(action)
+        print(action)
         traci.trafficlight.setPhase('n1', action)
 
         traci.simulationStep()
@@ -73,7 +79,7 @@ class SumoEnv:
         state = self.get_state_d()
         #duda
         wt = 0
-        for ilane in range(0, 8):
+        for ilane in range(0, 16):
             lane_id = self.lane_ids[ilane]
             wt += traci.lane.getWaitingTime(lane_id)
         reward = - (wt - self.wt_last)*0.004
@@ -81,7 +87,7 @@ class SumoEnv:
         if self.ncars > 250:
             done = True
 
-        return state, reward, done, np.array([[reward]])
+        return wt,state, reward, done, np.array([[reward]])
     
     def reset(self):
         self.wt_last = 0.

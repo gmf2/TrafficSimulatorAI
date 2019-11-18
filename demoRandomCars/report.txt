@@ -1,0 +1,79 @@
+TensorFlow 2.0 Upgrade Script
+-----------------------------
+Converted 1 files
+Detected 2 issues that require attention
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+File: ./agentSUMO.py
+--------------------------------------------------------------------------------
+./agentSUMO.py:93:23: ERROR: Using member tf.contrib.layers.apply_regularization in deprecated module tf.contrib. tf.contrib.layers.apply_regularization cannot be converted automatically. tf.contrib will not be distributed with TensorFlow 2.0, please consider an alternative in non-contrib TensorFlow, a community-maintained repository such as tensorflow/addons, or fork the required code.
+./agentSUMO.py:120:23: ERROR: Using member tf.contrib.layers.apply_regularization in deprecated module tf.contrib. tf.contrib.layers.apply_regularization cannot be converted automatically. tf.contrib will not be distributed with TensorFlow 2.0, please consider an alternative in non-contrib TensorFlow, a community-maintained repository such as tensorflow/addons, or fork the required code.
+================================================================================
+Detailed log follows:
+
+================================================================================
+--------------------------------------------------------------------------------
+Processing file './agentSUMO.py'
+ outputting to './agentSUMOv2.py'
+--------------------------------------------------------------------------------
+
+23:20: INFO: Renamed 'tf.InteractiveSession' to 'tf.compat.v1.InteractiveSession'
+24:22: INFO: Renamed 'tf.global_variables_initializer' to 'tf.compat.v1.global_variables_initializer'
+28:27: INFO: Renamed 'tf.placeholder' to 'tf.compat.v1.placeholder'
+33:13: INFO: `name` passed to `name_scope`. Because you may be re-entering an existing scope, it is not safe to convert automatically,  the v2 name_scope does not support re-entering scopes by name.
+
+33:13: INFO: Renamed 'tf.name_scope' to 'tf.compat.v1.name_scope'
+36:29: INFO: Renamed 'tf.truncated_normal' to 'tf.random.truncated_normal'
+38:25: INFO: Renamed 'tf.add_to_collection' to 'tf.compat.v1.add_to_collection'
+38:46: INFO: Renamed 'tf.GraphKeys' to 'tf.compat.v1.GraphKeys'
+39:25: INFO: Renamed 'tf.add_to_collection' to 'tf.compat.v1.add_to_collection'
+39:46: INFO: Renamed 'tf.GraphKeys' to 'tf.compat.v1.GraphKeys'
+51:13: INFO: `name` passed to `name_scope`. Because you may be re-entering an existing scope, it is not safe to convert automatically,  the v2 name_scope does not support re-entering scopes by name.
+
+51:13: INFO: Renamed 'tf.name_scope' to 'tf.compat.v1.name_scope'
+55:33: INFO: Renamed 'tf.truncated_normal' to 'tf.random.truncated_normal'
+57:29: INFO: Renamed 'tf.add_to_collection' to 'tf.compat.v1.add_to_collection'
+57:50: INFO: Renamed 'tf.GraphKeys' to 'tf.compat.v1.GraphKeys'
+58:29: INFO: Renamed 'tf.add_to_collection' to 'tf.compat.v1.add_to_collection'
+58:50: INFO: Renamed 'tf.GraphKeys' to 'tf.compat.v1.GraphKeys'
+74:29: INFO: Renamed 'tf.truncated_normal' to 'tf.random.truncated_normal'
+76:25: INFO: Renamed 'tf.add_to_collection' to 'tf.compat.v1.add_to_collection'
+76:46: INFO: Renamed 'tf.GraphKeys' to 'tf.compat.v1.GraphKeys'
+77:25: INFO: Renamed 'tf.add_to_collection' to 'tf.compat.v1.add_to_collection'
+77:46: INFO: Renamed 'tf.GraphKeys' to 'tf.compat.v1.GraphKeys'
+84:32: INFO: Renamed 'tf.placeholder' to 'tf.compat.v1.placeholder'
+85:29: INFO: Renamed 'tf.placeholder' to 'tf.compat.v1.placeholder'
+86:16: INFO: Added keywords to args of function 'tf.reduce_mean'
+86:16: INFO: Renamed keyword argument for tf.reduce_mean from reduction_indices to axis
+87:19: INFO: Renamed 'tf.log' to 'tf.math.log'
+88:21: INFO: Added keywords to args of function 'tf.reduce_mean'
+90:26: INFO: Multiplying scale arg of tf.contrib.layers.l2_regularizer by half to what tf.keras.regularizers.l2 expects.
+
+91:28: INFO: Renamed 'tf.get_collection' to 'tf.compat.v1.get_collection'
+91:46: INFO: Renamed 'tf.GraphKeys' to 'tf.compat.v1.GraphKeys'
+92:33: INFO: Renamed 'tf.get_collection' to 'tf.compat.v1.get_collection'
+92:51: INFO: Renamed 'tf.GraphKeys' to 'tf.compat.v1.GraphKeys'
+93:23: ERROR: Using member tf.contrib.layers.apply_regularization in deprecated module tf.contrib. tf.contrib.layers.apply_regularization cannot be converted automatically. tf.contrib will not be distributed with TensorFlow 2.0, please consider an alternative in non-contrib TensorFlow, a community-maintained repository such as tensorflow/addons, or fork the required code.
+96:22: INFO: Renamed 'tf.placeholder' to 'tf.compat.v1.placeholder'
+97:29: INFO: Renamed 'tf.train.AdamOptimizer' to 'tf.compat.v1.train.AdamOptimizer'
+99:13: INFO: `name` passed to `name_scope`. Because you may be re-entering an existing scope, it is not safe to convert automatically,  the v2 name_scope does not support re-entering scopes by name.
+
+99:13: INFO: Renamed 'tf.name_scope' to 'tf.compat.v1.name_scope'
+102:29: INFO: Renamed 'tf.truncated_normal' to 'tf.random.truncated_normal'
+104:25: INFO: Renamed 'tf.add_to_collection' to 'tf.compat.v1.add_to_collection'
+104:46: INFO: Renamed 'tf.GraphKeys' to 'tf.compat.v1.GraphKeys'
+105:25: INFO: Renamed 'tf.add_to_collection' to 'tf.compat.v1.add_to_collection'
+105:46: INFO: Renamed 'tf.GraphKeys' to 'tf.compat.v1.GraphKeys'
+114:29: INFO: Renamed 'tf.placeholder' to 'tf.compat.v1.placeholder'
+115:19: INFO: tf.losses.mean_squared_error requires manual check. tf.losses have been replaced with object oriented versions in TF 2.0 and after. The loss function calls have been converted to compat.v1 for backward compatibility. Please update these calls to the TF 2.0 versions.
+115:19: INFO: Renamed 'tf.losses.mean_squared_error' to 'tf.compat.v1.losses.mean_squared_error'
+117:26: INFO: Multiplying scale arg of tf.contrib.layers.l2_regularizer by half to what tf.keras.regularizers.l2 expects.
+
+118:28: INFO: Renamed 'tf.get_collection' to 'tf.compat.v1.get_collection'
+118:46: INFO: Renamed 'tf.GraphKeys' to 'tf.compat.v1.GraphKeys'
+119:33: INFO: Renamed 'tf.get_collection' to 'tf.compat.v1.get_collection'
+119:51: INFO: Renamed 'tf.GraphKeys' to 'tf.compat.v1.GraphKeys'
+120:23: ERROR: Using member tf.contrib.layers.apply_regularization in deprecated module tf.contrib. tf.contrib.layers.apply_regularization cannot be converted automatically. tf.contrib will not be distributed with TensorFlow 2.0, please consider an alternative in non-contrib TensorFlow, a community-maintained repository such as tensorflow/addons, or fork the required code.
+123:30: INFO: Renamed 'tf.train.AdamOptimizer' to 'tf.compat.v1.train.AdamOptimizer'
+--------------------------------------------------------------------------------
+
