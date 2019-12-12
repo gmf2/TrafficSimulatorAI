@@ -1,0 +1,32 @@
+1)#Traci
+
+1.1)##Simulación
+python “No Reinforcement Learning”/testTracy.py
+
+2)#Q-Learning
+
+2.1)##Simulación
+python "Reinforcement Learning"/QL/Ql_2way_intersection.py
+
+2.2)##Plot : Tiempo total de cada vehículo en cada step
+python "Reinforcement Learning"/Plots/plot.py -f "Reinforcement Learning"/QL/Outputs 
+       -out "Reinforcement Learning"/QL/Plots/Total_Waiting_Time_Per_Vehicle_Per_Step
+
+2.3)##Plot : Tiempo total de todos los vehículos
+python "Reinforcement Learning"/Plots/plot2.py -f "Reinforcement Learning"/QL/Outputs 
+	-out "Reinforcement Learning"/QL/Plots/Total_Waiting_Time_Of_Vehicles
+
+3)#A2C
+
+3.1)##Simulación
+python "Reinforcement Learning"/A2C/A2C_2way_intersection.py
+
+3.2)##Plot : Tiempo total de cada vehículo en cada step
+
+python "Reinforcement Learning"/Plots/plot.py -f "Reinforcement Learning"/QL/Outputs 
+	-out "Reinforcement Learning"/QL/Plots/Total_Waiting_Time_Per_Vehicle_Per_Step
+
+3.3)##Plot : Tiempo total de todos los vehículos
+
+python "Reinforcement Learning"/Plots/plot2.py -f "Reinforcement Learning"/A2C/Outputs 
+	-out "Reinforcement Learning"/A2C/Plots/ Total_Waiting_Time_Of_Vehicles
